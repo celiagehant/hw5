@@ -1,0 +1,541 @@
+{
+  "test_run": {
+    "started_at_utc": "2026-10-11T18:41:30Z",
+    "finished_at_utc": "2026-10-11T18:42:07Z",
+    "shop_business_date": "2026-08-31",
+    "vibe_coder": "Claude Code (Claude desktop app, Code tab), session opened in the Homework 5 folder",
+    "method": "Each tool was invoked through Claude Code's native MCP integration (mcp__campus-customs-ops__*), not through a test script.",
+    "why_rerun": "The original Problem 4 run (kept below under original_problem4_run) captured the baseline database. Problem 9 then paid invoice 501 and the September rent, so this re-run records the tool outputs against the database as submitted. Same prompts, same arguments."
+  },
+  "mcp_server": {
+    "identifier": "campus-customs-ops",
+    "config_file": ".mcp.json",
+    "transport": "stdio",
+    "command": ".venv/bin/python",
+    "entry_point": "mcp_server/server.py",
+    "env": {
+      "CAMPUS_CUSTOMS_DB": "data/campus_customs_new.db"
+    },
+    "secrets_in_config": false
+  },
+  "database": {
+    "file_used": "data/campus_customs_new.db",
+    "original_file": "data/campus_customs.db",
+    "original_opened_by_server": false,
+    "access_mode": "SQLite read-only (mode=ro) for these tools",
+    "state": "after the Problem 9 run (invoice 501 paid, rent paid, checking $160)",
+    "sha256_before_tests": {
+      "data/campus_customs_new.db": "c3afd6b996f207bf39e8b6e33a89411f3c2b026fb1835bbb0059781e314b39d1",
+      "data/campus_customs.db": "23686a90d698f7fa6f901a3f0a9774db9cbb31e13151c9e5717275f3321f360a"
+    },
+    "sha256_after_tests": {
+      "data/campus_customs_new.db": "c3afd6b996f207bf39e8b6e33a89411f3c2b026fb1835bbb0059781e314b39d1",
+      "data/campus_customs.db": "23686a90d698f7fa6f901a3f0a9774db9cbb31e13151c9e5717275f3321f360a"
+    },
+    "unchanged_by_tests": true
+  },
+  "tool_discovery": {
+    "connection_status": "connected",
+    "status_source": "Claude Code MCP server status for this session",
+    "tools_exposed_to_this_session": 3,
+    "note": "This Claude Code session connected in Problem 4 and still lists the three Problem 3 tools it discovered then. The server now registers 11 tools (see mcp_server/README.md); a new session would list all 11. The three smoke-tested tools are unchanged.",
+    "tools": [
+      {
+        "name": "get_stock_and_pricing",
+        "registered_in_claude_code_as": "mcp__campus-customs-ops__get_stock_and_pricing",
+        "description_available": true,
+        "input_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sku"
+          ],
+          "properties": {
+            "sku": {
+              "type": "string"
+            },
+            "size": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "qty_needed": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          }
+        }
+      },
+      {
+        "name": "check_vendor_eligibility",
+        "registered_in_claude_code_as": "mcp__campus-customs-ops__check_vendor_eligibility",
+        "description_available": true,
+        "input_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "vendor_id": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          }
+        }
+      },
+      {
+        "name": "get_rent_due_and_cash_position",
+        "registered_in_claude_code_as": "mcp__campus-customs-ops__get_rent_due_and_cash_position",
+        "description_available": true,
+        "input_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "lease_id"
+          ],
+          "properties": {
+            "lease_id": {
+              "type": "integer"
+            },
+            "account": {
+              "type": "string",
+              "default": "checking"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "tests": [
+    {
+      "test_id": "smoke-1",
+      "ticket_id": 103,
+      "prompt": "Ticket 103: the Yale AI Club wants 20 Basic Hoodie Big Yale (SKU CC-HOOD-NAVY) in size M and is asking for a bulk discount. Use the Campus Customs MCP server to check how many we have in stock, how many we are short, and the unit cost and list price.",
+      "tool_name": "get_stock_and_pricing",
+      "registered_tool_name": "mcp__campus-customs-ops__get_stock_and_pricing",
+      "arguments": {
+        "sku": "CC-HOOD-NAVY",
+        "size": "M",
+        "qty_needed": 20
+      },
+      "actual_output": {
+        "found": true,
+        "sku": "CC-HOOD-NAVY",
+        "product_name": "Basic Hoodie Big Yale",
+        "requested": {
+          "size": "M",
+          "qty_needed": 20
+        },
+        "database": {
+          "stock_by_size": [
+            {
+              "size": "S",
+              "qty": 4,
+              "location": "Aisle A"
+            },
+            {
+              "size": "M",
+              "qty": 8,
+              "location": "Aisle A"
+            },
+            {
+              "size": "L",
+              "qty": 14,
+              "location": "Aisle A"
+            },
+            {
+              "size": "XL",
+              "qty": 6,
+              "location": "Aisle A"
+            }
+          ],
+          "requested_size_stock": {
+            "size": "M",
+            "qty": 8,
+            "location": "Aisle A"
+          },
+          "pricing": {
+            "unit_cost": 22,
+            "list_price": 58
+          }
+        },
+        "computed": {
+          "shortfall": 12,
+          "can_fill_from_stock": false,
+          "unit_margin": 36,
+          "margin_pct_of_list_price": 62.07,
+          "max_discount_pct_before_selling_below_cost": 62.07,
+          "revenue_at_list_price_for_qty_needed": 1160,
+          "cost_for_qty_needed": 440
+        },
+        "notes": []
+      },
+      "status": "passed",
+      "verifies": "Stock and pricing for ticket 103's SKU and size; unchanged by Problem 9 because no stock was received.",
+      "validation_notes": [
+        "SQL: inventory CC-HOOD-NAVY M qty = 8; pricing unit_cost 22.0, list_price 58.0 \u2014 match.",
+        "Computed shortfall 20-8 = 12 and unit margin 58-22 = 36 \u2014 match."
+      ]
+    },
+    {
+      "test_id": "smoke-2",
+      "ticket_id": 101,
+      "prompt": "Ticket 101 needs a size S Classic Bulldog Tee restocked, and it references invoice 501 from Bulldog Print Co (vendor 1). Use the Campus Customs MCP server to check whether vendor 1 is eligible to ship new product, its lead time, and its open invoices.",
+      "tool_name": "check_vendor_eligibility",
+      "registered_tool_name": "mcp__campus-customs-ops__check_vendor_eligibility",
+      "arguments": {
+        "vendor_id": 1
+      },
+      "actual_output": {
+        "found": true,
+        "shop_date": "2026-08-31",
+        "vendors": [
+          {
+            "vendor_id": 1,
+            "name": "Bulldog Print Co",
+            "specialty": "apparel reprint",
+            "lead_days": 5,
+            "invoices": [
+              {
+                "invoice_id": 501,
+                "amount": 840,
+                "due_date": "2026-08-28",
+                "status": "paid",
+                "description": "Rush reprint CC-TEE-WHITE S",
+                "payments_recorded": [
+                  {
+                    "id": 1,
+                    "amount": 840,
+                    "paid_at": "2026-08-31",
+                    "approved_by": "Celia Gehant (entered by Claude Code)"
+                  }
+                ],
+                "days_past_due": 3
+              }
+            ],
+            "eligible_to_ship": true,
+            "eligibility_reason": "No open invoices.",
+            "open_unpaid_total": 0,
+            "earliest_arrival_if_ordered_today": "2026-09-05"
+          }
+        ],
+        "notes": [
+          "The database has no product-to-vendor table. Matching a SKU to a vendor by its specialty text is the agent's judgment, not a database fact.",
+          "earliest_arrival_if_ordered_today counts lead_days as calendar days from the shop's date; the vendors table does not say which kind of days they are."
+        ]
+      },
+      "status": "passed",
+      "verifies": "After Problem 9, invoice 501 is paid (payment 1), so Bulldog Print Co is eligible to ship again with arrival 2026-09-05 if ordered on the shop date.",
+      "validation_notes": [
+        "SQL: invoices 501 status = 'paid'; payments row 1 = invoice 501, $840.00 \u2014 match.",
+        "Tool quirk: days_past_due is still shown (3) for the paid invoice; it is computed from due_date regardless of status."
+      ]
+    },
+    {
+      "test_id": "smoke-3",
+      "ticket_id": 102,
+      "prompt": "Ticket 102: Elm City Properties says rent for the Chapel Street shop (lease 1) is due in 2 days. Use the Campus Customs MCP server to check the rent amount, due date, any rent already paid, and whether the checking account can cover it.",
+      "tool_name": "get_rent_due_and_cash_position",
+      "registered_tool_name": "mcp__campus-customs-ops__get_rent_due_and_cash_position",
+      "arguments": {
+        "lease_id": 1,
+        "account": "checking"
+      },
+      "actual_output": {
+        "found": true,
+        "shop_date": "2026-08-31",
+        "database": {
+          "lease": {
+            "id": 1,
+            "space_name": "Chapel Street shop",
+            "landlord": "Elm City Properties",
+            "monthly_rent": 2400,
+            "next_due": "2026-10-02",
+            "notes": null
+          },
+          "rent_payments_recorded": [
+            {
+              "id": 2,
+              "amount": 2400,
+              "account": "checking",
+              "paid_at": "2026-08-31",
+              "approved_by": "Celia Gehant (entered by Claude Code)"
+            }
+          ],
+          "cash_account": {
+            "name": "checking",
+            "balance": 160,
+            "date": "2026-08-31"
+          },
+          "open_invoices": []
+        },
+        "computed": {
+          "days_until_rent_due": 32,
+          "rent_due_status": "due in 32 day(s)",
+          "cash_covers_rent": false,
+          "balance_after_rent": -2240,
+          "open_invoices_total": 0,
+          "balance_after_rent_and_open_invoices": -2240
+        },
+        "notes": [
+          "The lease has no notes: the database records no grace period, late fee or penalty terms. Escalate questions about them to a human.",
+          "payments has no billing-period field, so a recorded rent payment cannot be tied to a specific due date from the database alone."
+        ]
+      },
+      "status": "passed",
+      "verifies": "After Problem 9, the September rent is recorded as payment 2, lease 1's next rent is due 2026-10-02, and checking holds $160, which does not cover the next $2,400.",
+      "validation_notes": [
+        "SQL: leases 1 next_due 2026-10-02, monthly_rent 2400.0; cash_accounts checking 160.0; payments row 2 = rent, lease 1, $2,400.00 \u2014 match.",
+        "Computed days_until_rent_due = 32 (2026-08-31 to 2026-10-02) and balance_after_rent = 160 - 2400 = -2240 \u2014 match."
+      ]
+    }
+  ],
+  "summary": {
+    "tests_run": 3,
+    "passed": 3,
+    "failed": 0
+  },
+  "notes": [
+    "The evidence contains no API keys, passwords or tokens; the MCP server needs none.",
+    "Approver names in the outputs are database values recorded during Problem 9."
+  ],
+  "original_problem4_run": {
+    "test_run": {
+      "started_at_utc": "2026-10-11T14:19:12Z",
+      "finished_at_utc": "2026-10-11T14:19:26Z",
+      "started_at_local": "2026-10-11T10:19:12-04:00",
+      "shop_business_date": "2026-08-31",
+      "shop_business_date_source": "desk.date_today",
+      "vibe_coder": "Claude Code (Claude desktop app, Code tab), session opened in the Homework 5 folder",
+      "method": "Each tool was invoked through Claude Code's native MCP integration (tool names mcp__campus-customs-ops__*), not through a test script."
+    },
+    "database": {
+      "file_used": "data/campus_customs_new.db",
+      "original_file": "data/campus_customs.db",
+      "original_opened_by_server": false,
+      "access_mode": "SQLite read-only (mode=ro)",
+      "sha256_before_tests": {
+        "data/campus_customs_new.db": "23686a90d698f7fa6f901a3f0a9774db9cbb31e13151c9e5717275f3321f360a",
+        "data/campus_customs.db": "23686a90d698f7fa6f901a3f0a9774db9cbb31e13151c9e5717275f3321f360a"
+      },
+      "sha256_after_tests": {
+        "data/campus_customs_new.db": "23686a90d698f7fa6f901a3f0a9774db9cbb31e13151c9e5717275f3321f360a",
+        "data/campus_customs.db": "23686a90d698f7fa6f901a3f0a9774db9cbb31e13151c9e5717275f3321f360a"
+      },
+      "unchanged_by_tests": true
+    },
+    "tests": [
+      {
+        "test_id": "smoke-1",
+        "ticket_id": 103,
+        "prompt": "Ticket 103: the Yale AI Club wants 20 Basic Hoodie Big Yale (SKU CC-HOOD-NAVY) in size M and is asking for a bulk discount. Use the Campus Customs MCP server to check how many we have in stock, how many we are short, and the unit cost and list price.",
+        "tool_name": "get_stock_and_pricing",
+        "registered_tool_name": "mcp__campus-customs-ops__get_stock_and_pricing",
+        "arguments": {
+          "sku": "CC-HOOD-NAVY",
+          "size": "M",
+          "qty_needed": 20
+        },
+        "actual_output": {
+          "found": true,
+          "sku": "CC-HOOD-NAVY",
+          "product_name": "Basic Hoodie Big Yale",
+          "requested": {
+            "size": "M",
+            "qty_needed": 20
+          },
+          "database": {
+            "stock_by_size": [
+              {
+                "size": "S",
+                "qty": 4,
+                "location": "Aisle A"
+              },
+              {
+                "size": "M",
+                "qty": 8,
+                "location": "Aisle A"
+              },
+              {
+                "size": "L",
+                "qty": 14,
+                "location": "Aisle A"
+              },
+              {
+                "size": "XL",
+                "qty": 6,
+                "location": "Aisle A"
+              }
+            ],
+            "requested_size_stock": {
+              "size": "M",
+              "qty": 8,
+              "location": "Aisle A"
+            },
+            "pricing": {
+              "unit_cost": 22,
+              "list_price": 58
+            }
+          },
+          "computed": {
+            "shortfall": 12,
+            "can_fill_from_stock": false,
+            "unit_margin": 36,
+            "margin_pct_of_list_price": 62.07,
+            "max_discount_pct_before_selling_below_cost": 62.07,
+            "revenue_at_list_price_for_qty_needed": 1160,
+            "cost_for_qty_needed": 440
+          },
+          "notes": []
+        },
+        "status": "passed",
+        "verifies": "The tool finds the ticket's SKU and size, reports 8 in stock against 20 requested (short 12), and returns the $22 cost and $58 list price the Accounting agent needs to judge a bulk discount.",
+        "validation_notes": [
+          "SELECT size, qty, location FROM inventory WHERE sku='CC-HOOD-NAVY' returned S=4, M=8, L=14, XL=6, all Aisle A, matching stock_by_size.",
+          "SELECT unit_cost, list_price FROM pricing WHERE sku='CC-HOOD-NAVY' returned 22.0 and 58.0, matching pricing.",
+          "Checked by SQL: shortfall 20-8=12, unit margin 58-22=36, margin 62.07% of list, 20x58=1160, 20x22=440."
+        ]
+      },
+      {
+        "test_id": "smoke-2",
+        "ticket_id": 101,
+        "prompt": "Ticket 101 needs a size S Classic Bulldog Tee restocked, and it references invoice 501 from Bulldog Print Co (vendor 1). Use the Campus Customs MCP server to check whether vendor 1 is eligible to ship new product, its lead time, and its open invoices.",
+        "tool_name": "check_vendor_eligibility",
+        "registered_tool_name": "mcp__campus-customs-ops__check_vendor_eligibility",
+        "arguments": {
+          "vendor_id": 1
+        },
+        "actual_output": {
+          "found": true,
+          "shop_date": "2026-08-31",
+          "vendors": [
+            {
+              "vendor_id": 1,
+              "name": "Bulldog Print Co",
+              "specialty": "apparel reprint",
+              "lead_days": 5,
+              "invoices": [
+                {
+                  "invoice_id": 501,
+                  "amount": 840,
+                  "due_date": "2026-08-28",
+                  "status": "open",
+                  "description": "Rush reprint CC-TEE-WHITE S",
+                  "payments_recorded": [],
+                  "days_past_due": 3
+                }
+              ],
+              "eligible_to_ship": false,
+              "eligibility_reason": "Open unpaid invoice(s): 501 ($840.00, due 2026-08-28)",
+              "open_unpaid_total": 840,
+              "earliest_arrival_if_ordered_today": null
+            }
+          ],
+          "notes": [
+            "The database has no product-to-vendor table. Matching a SKU to a vendor by its specialty text is the agent's judgment, not a database fact.",
+            "earliest_arrival_if_ordered_today counts lead_days as calendar days from the shop's date; the vendors table does not say which kind of days they are."
+          ]
+        },
+        "status": "passed",
+        "verifies": "The tool applies the open-invoice rule to the real database state: Bulldog Print Co has invoice 501 open and 3 days past due, so it is not eligible to ship and no arrival date is given.",
+        "validation_notes": [
+          "SELECT * FROM vendors WHERE id=1 returned Bulldog Print Co, apparel reprint, lead_days 5.",
+          "SELECT ... FROM invoices WHERE vendor_id=1 returned invoice 501, 840.0, due 2026-08-28, status open; julianday(desk.date_today) - julianday(due_date) = 3.",
+          "SELECT count(*) FROM payments returned 0, matching payments_recorded = []."
+        ]
+      },
+      {
+        "test_id": "smoke-3",
+        "ticket_id": 102,
+        "prompt": "Ticket 102: Elm City Properties says rent for the Chapel Street shop (lease 1) is due in 2 days. Use the Campus Customs MCP server to check the rent amount, due date, any rent already paid, and whether the checking account can cover it.",
+        "tool_name": "get_rent_due_and_cash_position",
+        "registered_tool_name": "mcp__campus-customs-ops__get_rent_due_and_cash_position",
+        "arguments": {
+          "lease_id": 1,
+          "account": "checking"
+        },
+        "actual_output": {
+          "found": true,
+          "shop_date": "2026-08-31",
+          "database": {
+            "lease": {
+              "id": 1,
+              "space_name": "Chapel Street shop",
+              "landlord": "Elm City Properties",
+              "monthly_rent": 2400,
+              "next_due": "2026-09-02",
+              "notes": null
+            },
+            "rent_payments_recorded": [],
+            "cash_account": {
+              "name": "checking",
+              "balance": 3400,
+              "date": "2026-08-31"
+            },
+            "open_invoices": [
+              {
+                "invoice_id": 501,
+                "vendor_id": 1,
+                "vendor_name": "Bulldog Print Co",
+                "amount": 840,
+                "due_date": "2026-08-28",
+                "status": "open",
+                "description": "Rush reprint CC-TEE-WHITE S"
+              }
+            ]
+          },
+          "computed": {
+            "days_until_rent_due": 2,
+            "rent_due_status": "due in 2 day(s)",
+            "cash_covers_rent": true,
+            "balance_after_rent": 1000,
+            "open_invoices_total": 840,
+            "balance_after_rent_and_open_invoices": 160
+          },
+          "notes": [
+            "The lease has no notes: the database records no grace period, late fee or penalty terms. Escalate questions about them to a human.",
+            "payments has no billing-period field, so a recorded rent payment cannot be tied to a specific due date from the database alone."
+          ]
+        },
+        "status": "passed",
+        "verifies": "The tool confirms the facts behind the rent notice from the database: $2,400 rent due 2026-09-02 (2 days after the shop date), no rent payment recorded, and $3,400 in checking, which covers rent ($1,000 left) but leaves $160 if invoice 501 is also paid.",
+        "validation_notes": [
+          "SELECT * FROM leases WHERE id=1 returned Chapel Street shop, Elm City Properties, 2400.0, next_due 2026-09-02, notes NULL.",
+          "SELECT * FROM cash_accounts WHERE name='checking' returned 3400.0 dated 2026-08-31.",
+          "Checked by SQL: julianday(next_due) - julianday(desk.date_today) = 2; 3400-2400 = 1000; open invoices total 840; 1000-840 = 160.",
+          "SELECT count(*) FROM payments WHERE kind='rent' AND ref_id=1 returned 0, matching rent_payments_recorded = []."
+        ]
+      }
+    ],
+    "summary": {
+      "tests_run": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    "failures_and_reruns": [],
+    "notes": [
+      "No tool call failed, so no reruns were needed.",
+      "Before the tests, Claude Code was open in the parent 'AI for Managers' folder, whose .mcp.json does not list this server. The session was moved into Homework 5 so that Homework 5/.mcp.json loaded; this was a setup step, not a test failure.",
+      "The smoke-test prompts were written by Claude Code for this run. The user asked for the tests to be run and did not type each prompt.",
+      "The evidence contains no API keys, passwords or tokens; the MCP server needs none."
+    ]
+  }
+}

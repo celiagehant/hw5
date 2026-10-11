@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus Customs — Resolved board evidence (Problem 9)</title>
+<style>
+  :root { --yale: #00356b; --ink: #1c2631; --muted: #5c6776; --line: #e3dccd; --ivory: #f6f2e9; --green: #2c6a43; --green-bg: #ecf5ee; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: var(--ink); background: var(--ivory); }
+  header { background: var(--yale); color: #fff; padding: 22px 32px; }
+  header h1 { margin: 0 0 4px; font: 600 28px/1.2 Georgia, "Iowan Old Style", serif; }
+  header p { margin: 0; color: #c9d7ea; font-size: 14px; }
+  nav { position: sticky; top: 0; z-index: 2; display: flex; gap: 8px; flex-wrap: wrap; padding: 10px 32px; background: #fffdf8; border-bottom: 1px solid var(--line); }
+  nav a { padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--yale); text-decoration: none; font-weight: 600; font-size: 14px; background: #fff; }
+  nav a:hover, nav a:focus-visible { background: #e9eff7; }
+  main { max-width: 1120px; margin: 0 auto; padding: 24px 32px 60px; }
+  .summary { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px 20px; margin-bottom: 26px; }
+  .summary table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .summary th, .summary td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .summary th { color: var(--muted); font-size: 12.5px; }
+  section.ticket { background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--green); border-radius: 8px; padding: 20px 24px; margin-bottom: 30px; scroll-margin-top: 64px; }
+  section.ticket h2 { margin: 0 0 4px; font: 600 26px/1.2 Georgia, "Iowan Old Style", serif; color: var(--yale); }
+  .meta { font-size: 13.5px; color: var(--muted); margin-bottom: 14px; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 700; color: var(--green); background: var(--green-bg); border: 1px solid #c2dcc9; }
+  figure { margin: 0 0 18px; }
+  figure img { display: block; width: 100%; max-width: 1040px; height: auto; border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+  figcaption { margin-top: 8px; font-size: 14px; color: var(--ink); }
+  figcaption strong { color: var(--yale); }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 860px) { .pair { grid-template-columns: 1fr; } }
+  code { font: 12.5px ui-monospace, Menlo, monospace; background: #eef0f3; padding: 1px 5px; border-radius: 4px; }
+  footer { text-align: center; color: var(--muted); font-size: 12.5px; padding-bottom: 30px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Campus Customs Operations Desk — resolved board evidence</h1>
+  <p>Problem 9 end-to-end run, 2026-10-11 · screenshots captured from the running React dashboard (http://localhost:5173), connected to the FastAPI backend and MCP server</p>
+</header>
+<nav aria-label="Tickets">
+  <a href="#summary">Summary</a>
+  <a href="#ticket-101">Ticket 101</a>
+  <a href="#ticket-102">Ticket 102</a>
+  <a href="#ticket-103">Ticket 103</a>
+</nav>
+<main>
+  <section class="summary" id="summary">
+    <table>
+      <thead><tr><th>Ticket</th><th>Run id</th><th>Run ended</th><th>Human decisions (dashboard)</th><th>Cash outflow</th><th>Final status (database)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>101</strong> Bulldog tee</td><td><code>de29a5509213</code></td><td>blocked</td><td>#1 pay invoice 501 $840 (executed, payment 1); #2 purchase order $8 (approved)</td><td>$840.00</td><td><span class="badge">resolved</span></td></tr>
+        <tr><td><strong>102</strong> Rent due</td><td><code>1fcc045db23e</code></td><td>awaiting approval</td><td>#3 pay rent $2,400 (executed, payment 2)</td><td>$2,400.00</td><td><span class="badge">resolved</span></td></tr>
+        <tr><td><strong>103</strong> Bulk hoodie discount</td><td><code>e407889e6757</code></td><td>awaiting approval</td><td>#5 10% discount (approved); #4 purchase order $264 (approved)</td><td>$0.00</td><td><span class="badge">resolved</span></td></tr>
+      </tbody>
+    </table>
+    <p class="meta" style="margin:10px 0 0">Checking: $3,400.00 after the reset at 17:42:03Z, then $160.00 after the run ($3,400 − $3,240). The figures are verified in <code>data/campus_customs_new.db</code>; see the Cash tab of <code>desk_tickets.html</code>.</p>
+  </section>
+
+  <section class="ticket" id="ticket-101">
+    <h2>Ticket 101 — Bulldog tee, size S <span class="badge">resolved</span></h2>
+    <div class="meta">Run <code>de29a5509213</code> · resolved 17:44:43Z after the human approved proposals #1 and #2</div>
+    <figure>
+      <img src="screenshots/ticket-101-resolved.jpg" alt="Full Operations Desk board with ticket 101 selected and marked Resolved, checking balance $2,560.00, and the activity feed showing Payment executed and Purchase approved events">
+      <figcaption><strong>Full board, right after resolution.</strong> The ticket 101 stub shows <em>Resolved</em>, and the status strip reads “The database confirms this ticket is resolved.” The ledger shows $2,560.00 after the $840 invoice payment. The feed ends with the human <em>Payment executed</em> (invoice 501) and <em>Purchase approved</em> (1-tee draft order) events, the second marked Resolved.</figcaption>
+    </figure>
+    <div class="pair">
+      <figure>
+        <img src="screenshots/ticket-101-resolved-detail.jpg" alt="Close-up of ticket 101 workspace showing Resolved status and the run finished Blocked with database confirmation">
+        <figcaption><strong>Close-up.</strong> The run itself ended <em>Blocked</em> (invoice 501 open). The ticket resolved only after the approvals, which is shown by “Ticket status: Resolved”.</figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/ticket-101-run1-live.jpg" alt="Ticket 101 while the agents were working: Agents working pill, Live activity feed">
+        <figcaption><strong>During the run</strong> (captured live): <em>Workflow running · 1</em>, the stub shows <em>Agents working</em>, and the feed is marked <em>Live</em> as the Boss begins.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="ticket" id="ticket-102">
+    <h2>Ticket 102 — Rent due <span class="badge">resolved</span></h2>
+    <div class="meta">Run <code>1fcc045db23e</code> · resolved 17:46:16Z after the human approved proposal #3</div>
+    <figure>
+      <img src="screenshots/ticket-102-resolved.jpg" alt="Full Operations Desk board with ticket 102 selected and Resolved, checking balance $160.00 with was $2,560.00, and Payment executed in the feed">
+      <figcaption><strong>Full board, right after resolution.</strong> Tickets 101 and 102 both show <em>Resolved</em>. The ledger shows $160.00 with “▼ was $2,560.00” after the $2,400 rent payment. The approval panel and the feed both show <em>Payment executed</em> (payment 2, next due 2026-10-02).</figcaption>
+    </figure>
+    <figure>
+      <img src="screenshots/ticket-102-resolved-detail.jpg" alt="Close-up of ticket 102 workspace with Resolved status and database confirmation">
+      <figcaption><strong>Close-up.</strong> “Ticket status: Resolved”. The run ended <em>Awaiting approval</em>, and the status strip confirms the database has the ticket resolved.</figcaption>
+    </figure>
+  </section>
+
+  <section class="ticket" id="ticket-103">
+    <h2>Ticket 103 — Bulk hoodie discount <span class="badge">resolved</span></h2>
+    <div class="meta">Run <code>e407889e6757</code> · resolved 17:48:13Z after the human approved proposals #5 and #4</div>
+    <figure>
+      <img src="screenshots/ticket-103-resolved.jpg" alt="Full Operations Desk board with all three tickets Resolved, ticket 103 selected, and Discount approved and Purchase approved in the feed">
+      <figcaption><strong>Full board, right after resolution.</strong> All three stubs show <em>Resolved</em>. The ledger stays at $160.00, because the discount and the purchase order move no cash. The approval panel shows <em>Proposal #5: discount approved</em> (10% off, $58.00 → $52.20 each), and the feed shows <em>Discount approved</em> and <em>Purchase approved</em> (12 hoodies, draft, not sent).</figcaption>
+    </figure>
+    <div class="pair">
+      <figure>
+        <img src="screenshots/ticket-103-resolved-detail.jpg" alt="Close-up of the board with all three tickets resolved and checking balance $160.00">
+        <figcaption><strong>Close-up, final board.</strong> Tickets 101, 102 and 103 are all <em>Resolved</em>; checking is $160.00 and the operations status is <em>Agents idle</em>.</figcaption>
+      </figure>
+      <figure>
+        <img src="screenshots/ticket-103-awaiting-approval.jpg" alt="Ticket 103 before approval: Awaiting approval, 2 proposals awaiting your decision, ticket still open in the database">
+        <figcaption><strong>Before the human decision.</strong> The run finished <em>Awaiting approval</em>, and the strip reads “The ticket is still open in the database — the run finishing does not resolve it.” Two proposals were waiting.</figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+<footer>All images are unedited browser captures from the Claude Code browser pane, saved to <code>output/screenshots/</code>. The pane caps captures at 800 pixels wide.</footer>
+</body>
+</html>
